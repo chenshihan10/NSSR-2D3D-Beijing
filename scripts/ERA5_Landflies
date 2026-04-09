@@ -1,0 +1,57 @@
+
+// 2. 定义严格的单日目标 (24小时窗口)
+var targetDays = [
+  {name: 'Winter', date: '2023-01-16'},
+  {name: 'Spring', date: '2023-03-05'},
+  {name: 'Summer', date: '2023-08-28'},
+  {name: 'Autumn', date: '2023-11-24'} // 严格锁定这一天
+];
+
+// 3. 循环处理与导出
+targetDays.forEach(function(item) {
+  var startDate = ee.Date(item.date);
+  var endDate = startDate.advance(1, 'day'); // 严格的 24 小时窗口
+
+  // --- 关键修改点：联合 L8/L9 的 T1 和 T2 ---
+  var l8_t1 = ee.ImageCollection("LANDSAT/LC08/C02/T1");
+  var l8_t2 = ee.ImageCollection("LANDSAT/LC08/C02/T2");
+  var l9_t1 = ee.ImageCollection("LANDSAT/LC09/C02/T1");
+  var l9_t2 = ee.ImageCollection("LANDSAT/LC09/C02/T2");
+  
+  // 合并所有四个集合
+  var mergedCol = l8_t1.merge(l8_t2).merge(l9_t1).merge(l9_t2)
+    .filterBounds(roi)
+    .filterDate(startDate, endDate); // 严格筛选
+
+  var count = mergedCol.size();
+  
+  // 在 Console 打印详细的搜索结果，方便你查看是哪颗卫星、哪个 Tier
+  print(item.name + ' (' + item.date + ') 找到的影像景数:', count);
+
+  // 4. 影像拼接与裁剪
+  // 使用 mosaic() 处理多景重叠（如果ROI较大跨越了不同Row）
+  var finalImg = ee.Image(ee.Algorithms.If(
+    count.gt(0),
+    mergedCol.mosaic().clip(roi),
+    null
+  ));
+
+  if (finalImg !== null) {
+    // 原始 DN 值可视化
+    Map.addLayer(finalImg, {bands: ['B4', 'B3', 'B2'], min: 0, max: 30000}, 'Raw_' + item.name + '_' + item.date);
+
+    // 5. 导出任务设置
+    Export.image.toDrive({
+      image: finalImg,
+      description: 'ManualROI_L89_L1_Raw_' + item.name + '_' + item.date.replace(/-/g, ''),
+      folder: 'Landsat_Project_Raw_StrictDate',
+      scale: 30,
+      region: roi, // 使用你手动绘制的几何范围
+      crs: 'EPSG:32650', // 你的 UTM 50N 坐标系
+      fileFormat: 'GeoTIFF',
+      maxPixels: 1e13
+    });
+  } else {
+    print('警告：' + item.name + ' (' + item.date + ') 在 L8/L9 的 T1/T2 中均未搜到影像。这说明该日期卫星未经过北京。');
+  }
+});
