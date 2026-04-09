@@ -114,6 +114,5 @@ python scripts/train_samples_seasonal_output2.py
 ---
 
 ## 7. 当前版本备注
-- 旧版 `input/ERA5` 不再使用；后续统一使用 `era52`。
 - 若需完整过程说明，见 `SUMMARY.md`。
 
