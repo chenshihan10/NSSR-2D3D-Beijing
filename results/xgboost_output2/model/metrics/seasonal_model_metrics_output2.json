@@ -1,0 +1,42 @@
+[
+  {
+    "Season": "Spring",
+    "Rows": 423563,
+    "R2_CV_Mean": 0.22225605249404906,
+    "R2_CV_Std": 0.009934219155125556,
+    "MAE_CV_Mean": 8.787784957885743,
+    "RMSE_CV_Mean": 11.567424265395323,
+    "Features": "MBH,BU,FAR,MBV,SCD,BSA,BSI,SVF",
+    "GroupMethod": "GroupKFold_5_block_300m"
+  },
+  {
+    "Season": "Summer",
+    "Rows": 423561,
+    "R2_CV_Mean": 0.12141486406326293,
+    "R2_CV_Std": 0.008424498154538522,
+    "MAE_CV_Mean": 17.371028900146484,
+    "RMSE_CV_Mean": 23.37517703154185,
+    "Features": "MBH,BU,FAR,MBV,SCD,BSA,BSI,SVF",
+    "GroupMethod": "GroupKFold_5_block_300m"
+  },
+  {
+    "Season": "Autumn",
+    "Rows": 423558,
+    "R2_CV_Mean": 0.19812228679656982,
+    "R2_CV_Std": 0.007902278967750503,
+    "MAE_CV_Mean": 10.830611038208009,
+    "RMSE_CV_Mean": 14.393404325887904,
+    "Features": "MBH,BU,FAR,MBV,SCD,BSA,BSI,SVF",
+    "GroupMethod": "GroupKFold_5_block_300m"
+  },
+  {
+    "Season": "Winter",
+    "Rows": 423563,
+    "R2_CV_Mean": 0.2024852991104126,
+    "R2_CV_Std": 0.008626501039010186,
+    "MAE_CV_Mean": 9.751236915588379,
+    "RMSE_CV_Mean": 12.985146869709983,
+    "Features": "MBH,BU,FAR,MBV,SCD,BSA,BSI,SVF",
+    "GroupMethod": "GroupKFold_5_block_300m"
+  }
+]

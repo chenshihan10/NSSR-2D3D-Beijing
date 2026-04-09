@@ -1,0 +1,45 @@
+2D Seasonal NSSR Quantitative Assessment Summary
+
+Class-level mean NSSR by season:
+Season  LC_Class  Mean_NSSR  StdDev_NSSR  Pixel_Count
+Winter    Forest 318.101990    12.613017       317878
+Winter Shrubland 304.405334    16.017759           15
+Winter Grassland 303.139679    15.215249        27750
+Winter  Cropland 304.606079    11.206429        97065
+Winter Buildings 318.789093    15.096273       738643
+Winter  Bareland 304.979584    21.485966         6164
+Winter   SnowIce        NaN          NaN            0
+Winter     Water 337.026672    11.163858        18179
+Spring    Forest 467.320648    13.476398       317879
+Spring Shrubland 445.546997     8.851581           15
+Spring Grassland 448.365082    15.345196        27750
+Spring  Cropland 449.037170    10.741124        97065
+Spring Buildings 464.488647    13.219438       738646
+Spring  Bareland 449.168427    18.071810         6164
+Spring   SnowIce        NaN          NaN            0
+Spring     Water 496.372620    13.429502        18179
+Summer    Forest 558.294922    23.114542       317878
+Summer Shrubland 544.867493    20.628197           15
+Summer Grassland 550.863953    26.760551        27750
+Summer  Cropland 547.254639    24.445387        97065
+Summer Buildings 562.543030    26.613998       738643
+Summer  Bareland 546.994019    39.492416         6164
+Summer   SnowIce        NaN          NaN            0
+Summer     Water 622.354919    22.488811        18179
+Autumn    Forest 331.625000    13.802544       317876
+Autumn Shrubland 318.440552    17.879293           15
+Autumn Grassland 317.595245    17.577070        27750
+Autumn  Cropland 318.342255    13.088222        97065
+Autumn Buildings 332.280762    16.808273       738626
+Autumn  Bareland 318.974152    24.745066         6164
+Autumn   SnowIce        NaN          NaN            0
+Autumn     Water 359.742828     9.792407        18179
+
+Buildings vs Natural (Grassland+Forest) delta:
+Season  Buildings_Mean_NSSR  Natural_Mean_NSSR  Delta_NSSR_Buildings_minus_Natural
+Winter           318.789093         310.620834                            8.168259
+Spring           464.488647         457.842865                            6.645782
+Summer           562.543030         554.579437                            7.963593
+Autumn           332.280762         324.610123                            7.670639
+
+Buildings summer/winter std ratio: 1.763
