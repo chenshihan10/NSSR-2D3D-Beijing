@@ -76,16 +76,19 @@ DSSR_Wm2 = max(SSR(t) - SSR(t-1h), 0) / 3600
 ### 4.3 地物分类季节均值
 ![NSSR LC Seasonal Mean](results/diwufenlei/figures/NSSR_LC_Seasonal_Mean.png)
 
-### 4.4 地物分类分布范围
+### 4.4 四季分面：8类地物均值与贡献占比
+![NSSR LC Seasonal Mean Contribution 4Panel](results/diwufenlei/figures/NSSR_LC_Seasonal_Mean_Contribution_4Panel.png)
+
+### 4.5 地物分类分布范围
 ![NSSR LC Seasonal Range](results/diwufenlei/figures/NSSR_LC_Seasonal_Range.png)
 
-### 4.5 地物分类归一化对比
+### 4.6 地物分类归一化对比
 ![NSSR LC Seasonal Mean Normalized](results/diwufenlei/figures/NSSR_LC_Seasonal_Mean_Normalized.png)
 
-### 4.6 SHAP 贡献（示例：夏季）
+### 4.7 SHAP 贡献（示例：夏季）
 ![SHAP Summer](results/xgboost_output2/model/shap/shap_importance_summer_output2.png)
 
-### 4.7 形态关系检查（BSA vs SVF）
+### 4.8 形态关系检查（BSA vs SVF）
 ![BSA vs SVF Density](results/figures/BSA_vs_SVF_density.png)
 
 ---

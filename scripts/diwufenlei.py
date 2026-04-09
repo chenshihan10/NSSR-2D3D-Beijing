@@ -307,15 +307,29 @@ def _plot_normalized_means(stats_df: pd.DataFrame, out_png: Path) -> None:
 def _plot_spatial_maps(out_png: Path) -> None:
     fig, axes = plt.subplots(2, 3, figsize=(15, 9), dpi=180)
     season_order = ["Winter", "Spring", "Summer", "Autumn"]
-    for i, season in enumerate(season_order):
-        nssr_path = SEASON_FILES[season]
-        with rasterio.open(nssr_path) as src:
+    # Use a global color scale across seasons to avoid visual jump.
+    all_vals = []
+    season_arrays = {}
+    for season in season_order:
+        with rasterio.open(SEASON_FILES[season]) as src:
             arr = src.read(1).astype(np.float32)
             nodata = src.nodata
             if nodata is not None and np.isfinite(nodata):
                 arr[arr == nodata] = np.nan
+        season_arrays[season] = arr
+        vals = arr[np.isfinite(arr) & (arr > 0)]
+        if vals.size > 0:
+            all_vals.append(vals)
+    if not all_vals:
+        raise ValueError("No valid NSSR values for spatial maps.")
+    all_cat = np.concatenate(all_vals)
+    vmin = float(np.nanpercentile(all_cat, 2))
+    vmax = float(np.nanpercentile(all_cat, 98))
+
+    for i, season in enumerate(season_order):
+        arr = season_arrays[season]
         ax = axes.flat[i]
-        im = ax.imshow(arr, cmap="Spectral_r", vmin=np.nanpercentile(arr, 2), vmax=np.nanpercentile(arr, 98))
+        im = ax.imshow(arr, cmap="viridis", vmin=vmin, vmax=vmax)
         ax.set_title(season)
         ax.axis("off")
         fig.colorbar(im, ax=ax, fraction=0.045, pad=0.02)
@@ -341,6 +355,43 @@ def _plot_spatial_maps(out_png: Path) -> None:
     )
     plt.tight_layout()
     plt.savefig(out_png, bbox_inches="tight")
+    plt.close()
+
+
+def _plot_seasonal_mean_share(stats_df: pd.DataFrame, share_df: pd.DataFrame, out_png: Path) -> None:
+    """Four seasonal panels: 8-class mean NSSR (bar) + share (line)."""
+    seasons = ["Winter", "Spring", "Summer", "Autumn"]
+    lc_order = list(LC_GROUPS.keys())
+    fig, axes = plt.subplots(2, 2, figsize=(15, 9), dpi=180)
+
+    for ax, season in zip(axes.flat, seasons):
+        s1 = stats_df[stats_df["Season"] == season].set_index("LC_Class").reindex(lc_order)
+        s2 = share_df[share_df["Season"] == season].set_index("LC_Class").reindex(lc_order)
+
+        x = np.arange(len(lc_order))
+        mean_vals = s1["Mean_NSSR"].to_numpy(dtype=np.float32)
+        share_vals = (s2["NSSR_Share"].to_numpy(dtype=np.float32) * 100.0)
+
+        bars = ax.bar(x, mean_vals, color="#4C78A8", alpha=0.85, label="Mean NSSR")
+        ax.set_title(season)
+        ax.set_ylabel("Mean NSSR (W/m²)")
+        ax.set_xticks(x)
+        ax.set_xticklabels(lc_order, rotation=25, ha="right")
+        ax.grid(axis="y", linestyle="--", alpha=0.25)
+
+        ax2 = ax.twinx()
+        ax2.plot(x, share_vals, color="#F58518", marker="o", linewidth=1.6, label="Contribution Share")
+        ax2.set_ylabel("Contribution Share (%)")
+        ax2.set_ylim(0, max(65, np.nanmax(share_vals) * 1.2 if np.isfinite(np.nanmax(share_vals)) else 65))
+
+        # Combined legend
+        h1, l1 = ax.get_legend_handles_labels()
+        h2, l2 = ax2.get_legend_handles_labels()
+        ax.legend(h1 + h2, l1 + l2, loc="upper right", fontsize=8)
+
+    fig.suptitle("Seasonal NSSR by 8 Land-Cover Classes: Mean and Contribution Share", fontsize=14, y=0.995)
+    fig.tight_layout()
+    fig.savefig(out_png, bbox_inches="tight")
     plt.close()
 
 
@@ -387,6 +438,7 @@ def main() -> None:
     fig_range_png = FIG_DIR / "NSSR_LC_Seasonal_Range.png"
     fig_norm_png = FIG_DIR / "NSSR_LC_Seasonal_Mean_Normalized.png"
     fig_maps_png = FIG_DIR / "NSSR_Seasonal_Spatial_Maps.png"
+    fig_mean_share_png = FIG_DIR / "NSSR_LC_Seasonal_Mean_Contribution_4Panel.png"
     summary_txt = OUT_DIR / "NSSR_2D_Summary.txt"
 
     stats_df.to_csv(stats_csv, index=False, encoding="utf-8-sig")
@@ -404,6 +456,7 @@ def main() -> None:
     _plot_mean_std(stats_df, fig_range_png)
     _plot_normalized_means(stats_df, fig_norm_png)
     _plot_spatial_maps(fig_maps_png)
+    _plot_seasonal_mean_share(stats_df, share_df, fig_mean_share_png)
     _write_summary(stats_df, delta_df, summary_txt)
 
     print(f"Saved: {stats_csv}")
@@ -415,6 +468,7 @@ def main() -> None:
     print(f"Saved: {fig_range_png}")
     print(f"Saved: {fig_norm_png}")
     print(f"Saved: {fig_maps_png}")
+    print(f"Saved: {fig_mean_share_png}")
     print(f"Saved: {summary_txt}")
     print("\nSeasonal LC statistics preview:")
     print(stats_df.to_string(index=False))
