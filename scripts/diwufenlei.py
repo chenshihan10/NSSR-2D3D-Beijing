@@ -481,8 +481,6 @@ def main() -> None:
     share_csv = OUT_DIR / "NSSR_LC_Seasonal_Contribution.csv"
     core_suburb_csv = OUT_DIR / "NSSR_Core_Suburb_Seasonal_Statistics.csv"
     change_csv = OUT_DIR / "NSSR_LC_Seasonal_ChangeSummary.csv"
-    fig_mean_png = FIG_DIR / "NSSR_LC_Seasonal_Mean.png"
-    fig_range_png = FIG_DIR / "NSSR_LC_Seasonal_Range.png"
     fig_norm_png = FIG_DIR / "NSSR_LC_Seasonal_Mean_Normalized.png"
     fig_maps_png = FIG_DIR / "NSSR_Seasonal_Spatial_Maps.png"
     fig_mean_share_png = FIG_DIR / "NSSR_LC_Seasonal_Mean_Contribution_4Panel.png"
@@ -503,8 +501,6 @@ def main() -> None:
     gradient_df.to_csv(gradient_csv, index=False, encoding="utf-8-sig")
     change_df = _season_change_summary(stats_df)
     change_df.to_csv(change_csv, index=False, encoding="utf-8-sig")
-    _plot_grouped_means(stats_df, fig_mean_png)
-    _plot_mean_std(stats_df, fig_range_png)
     _plot_normalized_means(stats_df, fig_norm_png)
     _plot_spatial_maps(fig_maps_png)
     _plot_seasonal_mean_share(stats_df, share_df, fig_mean_share_png)
@@ -517,8 +513,6 @@ def main() -> None:
     print(f"Saved: {core_suburb_csv}")
     print(f"Saved: {gradient_csv}")
     print(f"Saved: {change_csv}")
-    print(f"Saved: {fig_mean_png}")
-    print(f"Saved: {fig_range_png}")
     print(f"Saved: {fig_norm_png}")
     print(f"Saved: {fig_maps_png}")
     print(f"Saved: {fig_mean_share_png}")
