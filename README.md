@@ -82,13 +82,13 @@ DSSR_Wm2 = max(SSR(t) - SSR(t-1h), 0) / 3600
 ### 4.5 地物分类分布范围
 ![NSSR LC Seasonal Range](results/diwufenlei/figures/NSSR_LC_Seasonal_Range.png)
 
-### 4.6 地物分类归一化对比
+### 4.6 地物分布分位范围（P10-P90）`n![NSSR LC Seasonal Quantile Spread 4Panel](results/diwufenlei/figures/NSSR_LC_Seasonal_QuantileSpread_4Panel.png)`n`n### 4.7 地物分类归一化对比
 ![NSSR LC Seasonal Mean Normalized](results/diwufenlei/figures/NSSR_LC_Seasonal_Mean_Normalized.png)
 
-### 4.7 SHAP 贡献（示例：夏季）
+### 4.8 SHAP 贡献（示例：夏季）
 ![SHAP Summer](results/xgboost_output2/model/shap/shap_importance_summer_output2.png)
 
-### 4.8 形态关系检查（BSA vs SVF）
+### 4.9 形态关系检查（BSA vs SVF）
 ![BSA vs SVF Density](results/figures/BSA_vs_SVF_density.png)
 
 ---
@@ -119,3 +119,4 @@ python scripts/train_samples_seasonal_output2.py
 ## 7. 当前版本备注
 - 旧版 `input/ERA5` 不再使用；后续统一使用 `era52`。
 - 若需完整过程说明，见 `SUMMARY.md`。
+

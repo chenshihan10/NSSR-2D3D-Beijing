@@ -1,39 +1,39 @@
 2D Seasonal NSSR Quantitative Assessment Summary
 
 Class-level mean NSSR by season:
-Season  LC_Class  Mean_NSSR  StdDev_NSSR  Pixel_Count
-Winter    Forest 318.101990    12.613017       317878
-Winter Shrubland 304.405334    16.017759           15
-Winter Grassland 303.139679    15.215249        27750
-Winter  Cropland 304.606079    11.206429        97065
-Winter Buildings 318.789093    15.096273       738643
-Winter  Bareland 304.979584    21.485966         6164
-Winter   SnowIce        NaN          NaN            0
-Winter     Water 337.026672    11.163858        18179
-Spring    Forest 467.320648    13.476398       317879
-Spring Shrubland 445.546997     8.851581           15
-Spring Grassland 448.365082    15.345196        27750
-Spring  Cropland 449.037170    10.741124        97065
-Spring Buildings 464.488647    13.219438       738646
-Spring  Bareland 449.168427    18.071810         6164
-Spring   SnowIce        NaN          NaN            0
-Spring     Water 496.372620    13.429502        18179
-Summer    Forest 558.294922    23.114542       317878
-Summer Shrubland 544.867493    20.628197           15
-Summer Grassland 550.863953    26.760551        27750
-Summer  Cropland 547.254639    24.445387        97065
-Summer Buildings 562.543030    26.613998       738643
-Summer  Bareland 546.994019    39.492416         6164
-Summer   SnowIce        NaN          NaN            0
-Summer     Water 622.354919    22.488811        18179
-Autumn    Forest 331.625000    13.802544       317876
-Autumn Shrubland 318.440552    17.879293           15
-Autumn Grassland 317.595245    17.577070        27750
-Autumn  Cropland 318.342255    13.088222        97065
-Autumn Buildings 332.280762    16.808273       738626
-Autumn  Bareland 318.974152    24.745066         6164
-Autumn   SnowIce        NaN          NaN            0
-Autumn     Water 359.742828     9.792407        18179
+Season  LC_Class  Mean_NSSR  StdDev_NSSR   P10_NSSR   P50_NSSR   P90_NSSR  IQR_NSSR  Spread_P90_P10  Pixel_Count
+Winter    Forest 318.101990    12.613017 303.631042 316.940887 335.629303 15.925598       31.998260       317878
+Winter Shrubland 304.405334    16.017759 290.357727 300.914398 330.875214 10.425323       40.517487           15
+Winter Grassland 303.139679    15.215249 285.902985 302.777222 321.108551 16.716187       35.205566        27750
+Winter  Cropland 304.606079    11.206429 292.296844 304.275696 316.583160 12.599030       24.286316        97065
+Winter Buildings 318.789093    15.096273 299.962524 320.190491 336.536652 18.936707       36.574127       738643
+Winter  Bareland 304.979584    21.485966 280.157501 304.951965 332.804321 26.479034       52.646820         6164
+Winter   SnowIce        NaN          NaN        NaN        NaN        NaN       NaN             NaN            0
+Winter     Water 337.026672    11.163858 325.597229 339.173920 346.420685  9.226318       20.823456        18179
+Spring    Forest 467.320648    13.476398 450.829651 466.848785 484.472595 18.155853       33.642944       317879
+Spring Shrubland 445.546997     8.851581 438.762238 441.486969 459.588440  7.224243       20.826202           15
+Spring Grassland 448.365082    15.345196 430.851624 446.585449 467.467133 17.381836       36.615509        27750
+Spring  Cropland 449.037170    10.741124 436.729462 448.505096 461.767334 12.903046       25.037872        97065
+Spring Buildings 464.488647    13.219438 447.202148 466.093933 479.590576 17.332825       32.388428       738646
+Spring  Bareland 449.168427    18.071810 428.003937 450.246216 470.651398 23.065186       42.647461         6164
+Spring   SnowIce        NaN          NaN        NaN        NaN        NaN       NaN             NaN            0
+Spring     Water 496.372620    13.429502 478.755768 499.044739 510.885773 15.594574       32.130005        18179
+Summer    Forest 558.294922    23.114542 529.318115 558.515381 586.175537 28.483948       56.857422       317878
+Summer Shrubland 544.867493    20.628197 524.350098 536.659363 564.409729 24.281738       40.059631           15
+Summer Grassland 550.863953    26.760551 521.779602 548.393311 582.442322 25.570007       60.662720        27750
+Summer  Cropland 547.254639    24.445387 520.663208 546.001343 570.881897 24.224426       50.218689        97065
+Summer Buildings 562.543030    26.613998 530.847961 564.924072 591.995789 31.475525       61.147827       738643
+Summer  Bareland 546.994019    39.492416 501.445221 551.366821 589.003784 38.831665       87.558563         6164
+Summer   SnowIce        NaN          NaN        NaN        NaN        NaN       NaN             NaN            0
+Summer     Water 622.354919    22.488811 590.211609 628.349121 642.832520 20.229126       52.620911        18179
+Autumn    Forest 331.625000    13.802544 315.752899 330.293182 351.040955 17.269867       35.288055       317876
+Autumn Shrubland 318.440552    17.879293 300.957794 313.849213 345.420654 10.415161       44.462860           15
+Autumn Grassland 317.595245    17.577070 297.071686 316.267914 340.738068 19.117065       43.666382        27750
+Autumn  Cropland 318.342255    13.088222 303.541687 317.969879 332.285187 13.972809       28.743500        97065
+Autumn Buildings 332.280762    16.808273 311.554565 333.665985 352.090210 20.664429       40.535645       738626
+Autumn  Bareland 318.974152    24.745066 289.916046 319.439056 350.809937 31.289032       60.893890         6164
+Autumn   SnowIce        NaN          NaN        NaN        NaN        NaN       NaN             NaN            0
+Autumn     Water 359.742828     9.792407 346.596527 363.327332 366.497375  6.046722       19.900848        18179
 
 Buildings vs Natural (Grassland+Forest) delta:
 Season  Buildings_Mean_NSSR  Natural_Mean_NSSR  Delta_NSSR_Buildings_minus_Natural

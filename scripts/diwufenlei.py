@@ -89,14 +89,19 @@ def _season_stats(season: str, nssr_path: Path) -> pd.DataFrame:
             )
             continue
         rows.append(
-            {
-                "Season": season,
-                "LC_Class": lc_name,
-                "Mean_NSSR": float(np.nanmean(vals)),
-                "StdDev_NSSR": float(np.nanstd(vals)),
-                "Pixel_Count": int(vals.size),
-            }
-        )
+                {
+                    "Season": season,
+                    "LC_Class": lc_name,
+                    "Mean_NSSR": float(np.nanmean(vals)),
+                    "StdDev_NSSR": float(np.nanstd(vals)),
+                    "P10_NSSR": float(np.nanpercentile(vals, 10)),
+                    "P50_NSSR": float(np.nanpercentile(vals, 50)),
+                    "P90_NSSR": float(np.nanpercentile(vals, 90)),
+                    "IQR_NSSR": float(np.nanpercentile(vals, 75) - np.nanpercentile(vals, 25)),
+                    "Spread_P90_P10": float(np.nanpercentile(vals, 90) - np.nanpercentile(vals, 10)),
+                    "Pixel_Count": int(vals.size),
+                }
+            )
     return pd.DataFrame(rows)
 
 
@@ -225,6 +230,24 @@ def _season_change_summary(stats_df: pd.DataFrame) -> pd.DataFrame:
         )
     out = pd.DataFrame(rows).sort_values("Amplitude", ascending=False)
     return out
+
+
+def _build_core_suburb_gradient(core_suburb_df: pd.DataFrame) -> pd.DataFrame:
+    rows = []
+    for season in core_suburb_df["Season"].dropna().unique():
+        sub = core_suburb_df[(core_suburb_df["Season"] == season) & (core_suburb_df["LC_Class"] == "All")]
+        if {"Core", "Suburb"}.issubset(set(sub["Zone"].tolist())):
+            core_mean = float(sub[sub["Zone"] == "Core"]["Mean_NSSR"].iloc[0])
+            suburb_mean = float(sub[sub["Zone"] == "Suburb"]["Mean_NSSR"].iloc[0])
+            rows.append(
+                {
+                    "Season": season,
+                    "Core_Mean_NSSR": core_mean,
+                    "Suburb_Mean_NSSR": suburb_mean,
+                    "Core_minus_Suburb": core_mean - suburb_mean,
+                }
+            )
+    return pd.DataFrame(rows)
 
 
 def _plot_grouped_means(stats_df: pd.DataFrame, out_png: Path) -> None:
@@ -395,6 +418,30 @@ def _plot_seasonal_mean_share(stats_df: pd.DataFrame, share_df: pd.DataFrame, ou
     plt.close()
 
 
+def _plot_quantile_spread(stats_df: pd.DataFrame, out_png: Path) -> None:
+    seasons = ["Winter", "Spring", "Summer", "Autumn"]
+    lc_order = list(LC_GROUPS.keys())
+    fig, axes = plt.subplots(2, 2, figsize=(15, 9), dpi=180)
+    for ax, season in zip(axes.flat, seasons):
+        sub = stats_df[stats_df["Season"] == season].set_index("LC_Class").reindex(lc_order)
+        x = np.arange(len(lc_order))
+        p10 = sub["P10_NSSR"].to_numpy(dtype=np.float32)
+        p50 = sub["P50_NSSR"].to_numpy(dtype=np.float32)
+        p90 = sub["P90_NSSR"].to_numpy(dtype=np.float32)
+        ax.bar(x, p90 - p10, bottom=p10, color="#93c5fd", alpha=0.7, label="P10-P90 range")
+        ax.plot(x, p50, color="#1d4ed8", marker="o", linewidth=1.8, label="Median (P50)")
+        ax.set_title(season)
+        ax.set_xticks(x)
+        ax.set_xticklabels(lc_order, rotation=25, ha="right")
+        ax.set_ylabel("NSSR (W/m²)")
+        ax.grid(axis="y", linestyle="--", alpha=0.25)
+        ax.legend(fontsize=8, loc="upper right")
+    fig.suptitle("Seasonal NSSR Distribution by Land-Cover Class (P10-P90 + Median)", fontsize=14, y=0.995)
+    fig.tight_layout()
+    fig.savefig(out_png, bbox_inches="tight")
+    plt.close()
+
+
 def _write_summary(stats_df: pd.DataFrame, delta_df: pd.DataFrame, out_txt: Path) -> None:
     lines: list[str] = []
     lines.append("2D Seasonal NSSR Quantitative Assessment Summary")
@@ -439,7 +486,9 @@ def main() -> None:
     fig_norm_png = FIG_DIR / "NSSR_LC_Seasonal_Mean_Normalized.png"
     fig_maps_png = FIG_DIR / "NSSR_Seasonal_Spatial_Maps.png"
     fig_mean_share_png = FIG_DIR / "NSSR_LC_Seasonal_Mean_Contribution_4Panel.png"
+    fig_quantile_png = FIG_DIR / "NSSR_LC_Seasonal_QuantileSpread_4Panel.png"
     summary_txt = OUT_DIR / "NSSR_2D_Summary.txt"
+    gradient_csv = OUT_DIR / "NSSR_Core_Suburb_Gradient.csv"
 
     stats_df.to_csv(stats_csv, index=False, encoding="utf-8-sig")
     delta_df.to_csv(delta_csv, index=False, encoding="utf-8-sig")
@@ -450,6 +499,8 @@ def main() -> None:
         core_suburb_frames.append(_core_suburb_stats(season, nssr_path))
     core_suburb_df = pd.concat(core_suburb_frames, ignore_index=True)
     core_suburb_df.to_csv(core_suburb_csv, index=False, encoding="utf-8-sig")
+    gradient_df = _build_core_suburb_gradient(core_suburb_df)
+    gradient_df.to_csv(gradient_csv, index=False, encoding="utf-8-sig")
     change_df = _season_change_summary(stats_df)
     change_df.to_csv(change_csv, index=False, encoding="utf-8-sig")
     _plot_grouped_means(stats_df, fig_mean_png)
@@ -457,18 +508,21 @@ def main() -> None:
     _plot_normalized_means(stats_df, fig_norm_png)
     _plot_spatial_maps(fig_maps_png)
     _plot_seasonal_mean_share(stats_df, share_df, fig_mean_share_png)
+    _plot_quantile_spread(stats_df, fig_quantile_png)
     _write_summary(stats_df, delta_df, summary_txt)
 
     print(f"Saved: {stats_csv}")
     print(f"Saved: {delta_csv}")
     print(f"Saved: {share_csv}")
     print(f"Saved: {core_suburb_csv}")
+    print(f"Saved: {gradient_csv}")
     print(f"Saved: {change_csv}")
     print(f"Saved: {fig_mean_png}")
     print(f"Saved: {fig_range_png}")
     print(f"Saved: {fig_norm_png}")
     print(f"Saved: {fig_maps_png}")
     print(f"Saved: {fig_mean_share_png}")
+    print(f"Saved: {fig_quantile_png}")
     print(f"Saved: {summary_txt}")
     print("\nSeasonal LC statistics preview:")
     print(stats_df.to_string(index=False))
