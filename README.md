@@ -19,9 +19,10 @@ NSSR = DSSR * (1 - Albedo)
 ## 2. 数据来源与处理
 
 ### 2.1 外部原始数据（未上传）
-以下数据体量较大，不随仓库提交：
-- `input/Albedo`（Landsat 反照率产品）
-- `input/era52`（优化版 ERA5 像元太阳几何与 DSSR）
+数据类型,具体数据集,用途
+遥感影像,Landsat 8/9 OLI/TIRS C02 L2,提供大气校正后的地表反射率及太阳几何参数
+气象数据,ERA5-Land Hourly,提供 2m 露点温度，用于计算瞬时水汽压 e
+地理边界,用户上传的 assets (yanjiuqu),定义北京五环内平原区的研究范围
 
 请将原始数据按上述路径放置后运行脚本。
 
@@ -37,13 +38,7 @@ Albedo 由 Landsat 8/9 Collection 2 L2 地表反射率计算：
 并对时段影像采用 `median()` 进行云影响抑制。
 
 ### 2.3 ERA5 获取方法（GEE）
-ERA5-Land 小时数据按目标时刻提取，`DSSR` 由相邻小时累计量差分并转为 `W/m²`：
-
-```text
-DSSR_Wm2 = max(SSR(t) - SSR(t-1h), 0) / 3600
-```
-
-同批次导出像元级太阳天顶角/方位角与近地气象变量（优化后数据放在 `era52`）。
+下行短波辐射 (DSSR)：$$DSSR = \frac{I_{sc}}{d^2} \cdot \sin(H) \cdot \tau$$$I_{sc}$：太阳常数（$1367\ W/m^2$）。$d$：日地距离修正系数。$\sin(H)$：卫星过境时的太阳高度角正弦值。$\tau$：大气透射率。
 
 ### 2.4 已上传仓库的数据
 - `data/nssr`：四季反演后的 NSSR 栅格
@@ -68,7 +63,7 @@ DSSR_Wm2 = max(SSR(t) - SSR(t-1h), 0) / 3600
 ## 4. 关键结果图
 
 ### 4.1 四季 NSSR 空间组图
-![Seasonal NSSR Group](results/figures/NSSR_map.png)
+![Seasonal NSSR Group](results/figures/NSSR_Map.png)
 
 ### 4.3 四季分面：8类地物均值与贡献占比
 ![NSSR LC Seasonal Mean Contribution 4Panel](results/diwufenlei/figures/NSSR_LC_Seasonal_Mean_Contribution_4Panel.png)
