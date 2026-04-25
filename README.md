@@ -63,7 +63,7 @@ Albedo 由 Landsat 8/9 Collection 2 L2 地表反射率计算：
 ## 4. 关键结果图
 
 ### 4.1 四季 NSSR 空间组图
-![Seasonal NSSR Group](results/figures/NSSR_Map.png)
+![Seasonal NSSR Group](results/figures/NSSR_Map2.png)
 
 ### 4.3 四季分面：8类地物均值与贡献占比
 ![NSSR LC Seasonal Mean Contribution 4Panel](results/diwufenlei/figures/NSSR_LC_Seasonal_Mean_Contribution_4Panel.png)
