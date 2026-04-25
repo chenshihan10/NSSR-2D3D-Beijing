@@ -70,9 +70,6 @@ DSSR_Wm2 = max(SSR(t) - SSR(t-1h), 0) / 3600
 ### 4.1 四季 NSSR 空间组图
 ![Seasonal NSSR Group](results/figures/seasonal_nssr_inversion_group.png)
 
-### 4.2 四季 NSSR 统计图（最大/最小/均值）
-![Seasonal NSSR Bar Stats](results/figures/seasonal_nssr_bar_stats.png)
-
 ### 4.3 四季分面：8类地物均值与贡献占比
 ![NSSR LC Seasonal Mean Contribution 4Panel](results/diwufenlei/figures/NSSR_LC_Seasonal_Mean_Contribution_4Panel.png)
 
